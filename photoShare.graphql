@@ -1,0 +1,54 @@
+#photoShare.graphql
+scalar DateTime
+
+type Photo {
+	id: ID!
+	name: String!
+	description: String!
+	url: String
+	postedBy: User!
+	category: PhotoCategory!
+	created: DateTime!
+}
+
+type User {
+	githubLogin: ID!
+	name: String!
+	avatar: String!
+	postedPhotos: [Photos!]!
+}
+
+enum PhotoCategory {
+	POTRAIT
+	ACTION
+	LANDSCAPE
+	SELFIE
+}
+
+type Query {
+	totalPhotos: Int!
+	allPhotos(category: PhotoCategory): [Photo!]!
+	getPhotoById(id: ID, name: String): Photo
+	allPortraits: [Photo!]!
+}
+
+input PostPhotoInput {
+	name: String!
+	description: String
+	category: PhotoCategory = POTRAIT
+}
+
+type PostPhotoPayload {
+	photo: Photo
+	user: User
+	timePosted: String
+}
+
+type Mutation {
+	postPhoto(input: PostPhotoInput!): PostPhotoPayload!
+}
+
+type Subscription {
+	newUser: User!
+	newPhoto: Photo!
+}
